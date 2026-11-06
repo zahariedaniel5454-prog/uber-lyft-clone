@@ -13,27 +13,27 @@ const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 export const metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'Kova — Ride with confidence',
-    template: '%s · Kova',
+    default: 'RIDO — Călătorește în siguranță',
+    template: '%s · RIDO',
   },
   description:
-    'Premium ride-hailing where drivers keep 90%+ of every fare. Upfront pricing, live tracking and PIN-verified pickups.',
-  applicationName: 'Kova',
-  keywords: ['ride-hailing', 'taxi', 'rideshare', 'transportation', 'kova', 'kovaride'],
-  authors: [{ name: 'Kova' }],
+    'RIDO — platformă de transport la cerere în România, cu tarife transparente, urmărire live și curse verificate.',
+  applicationName: 'RIDO',
+  keywords: ['RIDO', 'ridesharing', 'transport', 'taxi', 'Timișoara'],
+  authors: [{ name: 'RIDO' }],
   openGraph: {
-    title: 'Kova — Ride with confidence',
+    title: 'RIDO — Călătorește în siguranță',
     description:
-      'Drivers keep 90%+ of every fare. Upfront pricing, live tracking, PIN-verified pickups.',
-    siteName: 'Kova',
+      'Comandă o cursă cu RIDO. Tarife transparente și urmărirea cursei în timp real.',
+    siteName: 'RIDO',
     url: BASE_URL,
     type: 'website',
-    locale: 'en_US',
+    locale: 'ro_RO',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Kova — Ride with confidence',
-    description: 'Drivers keep 90%+ of every fare. Upfront pricing, live tracking.',
+    title: 'RIDO — Călătorește în siguranță',
+    description: 'Comandă o cursă cu RIDO. Tarife transparente și urmărire live.',
   },
   robots: {
     index: true,
@@ -50,7 +50,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={dmSans.variable}>
+    <html lang="ro" className={dmSans.variable}>
       <body>{children}</body>
     </html>
   );
