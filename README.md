@@ -106,28 +106,24 @@ explains each one.
 
 ## Publicare și găzduire
 
-RIDO este un server Node (`server.js` runs Next.js and Socket.IO in one
+RIDO este un server Node (`server.js` pornește Next.js și Socket.IO în același
 proces), deci trebuie găzduit ca serviciu Node persistent, nu ca site static. Railway documentează servicii persistente și suport pentru aplicații Socket.IO.
 
 1. Creează un proiect în [Railway](https://railway.com/).
 2. Conectează repository-ul GitHub RIDO la un serviciu Railway.
 3. Adaugă servicii MongoDB și Redis, apoi configurează variabilele din `.env.example`:
-   - `MONGODB_URI` — a MongoDB database (include the database name in the
-     path). **MongoDB is required for now**; bring your own.
+   - `MONGODB_URI` — adresa bazei MongoDB, inclusiv numele bazei de date.
    - `REDIS_URL` — a Redis instance. **Redis is required too**; bring your
      own. It only holds rebuildable state (driver index, dispatch locks, ride
      rooms, rate-limit counters), so it needs no persistence.
-   - `NEXTAUTH_SECRET` — a long random string (`openssl rand -base64 32`).
-   - `NEXT_PUBLIC_APP_URL` — your app's public origin. It is inlined at build
-     time, so redeploy after changing it.
+   - `NEXTAUTH_SECRET` — un secret aleator lung (`openssl rand -base64 32`).
+   - `NEXT_PUBLIC_APP_URL` — adresa publică HTTPS a aplicației; reconstruiește după modificare.
    - `DRIVER_AUTO_APPROVE=false` for a real launch.
    - Optional: the Stripe and `STORAGE_*` values described above.
 4. Configurează comanda de pornire `npm start`, portul public și domeniul HTTPS:
 
    Railway poate construi aplicația din repository și redeploya la fiecare push pe branch-ul conectat.
-5. **Seed the first admin** once, from your machine, with `MONGODB_URI` set to
-   the production database: `npm run seed`. Then sign in as `admin`, change
-   the password, and delete the demo accounts from `/admin/users`.
+5. Nu folosi scriptul demonstrativ de seed în producție. Este necesar un proces separat și securizat de creare a primului administrator.
 6. **Check it:** `GET /api/health` returns 200 only when MongoDB and Redis are
    both reachable, and 503 naming the failing component otherwise.
 
