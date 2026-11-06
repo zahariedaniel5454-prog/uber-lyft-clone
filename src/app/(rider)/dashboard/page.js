@@ -282,7 +282,7 @@ export default function RiderDashboard() {
                 committedValue={dropoff?.address}
                 placeholder="Where are you going?"
                 icon={MapPin}
-                bias={geo || undefined}
+                bias={geo || TIMISOARA_CENTER}
                 autoFocus={Boolean(pickup)}
               />
             </div>
