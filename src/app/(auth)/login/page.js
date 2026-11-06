@@ -10,9 +10,9 @@ import LegalFooter from '@/components/shell/LegalFooter';
 
 function LoginForm() {
   const searchParams = useSearchParams();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [username, setNume de utilizator] = useState('');
+  const [password, setParolă] = useState('');
+  const [showParolă, setShowParolă] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -31,8 +31,8 @@ function LoginForm() {
     if (res?.error) {
       setError(
         res.status === 429
-          ? 'Too many sign-in attempts — please wait a few minutes and try again.'
-          : 'Invalid username or password'
+          ? 'Prea multe încercări. Așteaptă câteva minute și încearcă din nou.'
+          : 'Nume de utilizator sau parolă incorectă'
       );
       setLoading(false);
       return;
@@ -47,28 +47,28 @@ function LoginForm() {
     <div className="auth-page">
       <div className="auth-card animate-in">
         <div className="flex justify-center mb-6">
-          <Link href="/" aria-label="Kova home">
+          <Link href="/" aria-label="RIDO - pagina principal">
             <KovaLogo size={38} />
           </Link>
         </div>
 
         <h1 className="text-center" style={{ fontSize: '1.5rem' }}>
-          Welcome back
+          Bine ai revenit
         </h1>
         <p className="text-center muted small mt-1 mb-6">
-          Sign in to continue your journey
+          Autentifică-te pentru a continua
         </p>
 
         <form onSubmit={handleSubmit} className="flex-col gap-4">
           <div className="field">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">Nume de utilizator</label>
             <div className="input-wrap">
               <User size={17} />
               <input
                 id="username"
                 className="input"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => setNume de utilizator(e.target.value)}
                 placeholder="yourusername"
                 autoComplete="username"
                 autoFocus
@@ -78,15 +78,15 @@ function LoginForm() {
           </div>
 
           <div className="field">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Parolă</label>
             <div className="input-wrap" style={{ position: 'relative' }}>
               <Lock size={17} />
               <input
                 id="password"
                 className="input"
-                type={showPassword ? 'text' : 'password'}
+                type={showParolă ? 'text' : 'password'}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => setParolă(e.target.value)}
                 placeholder="••••••••"
                 autoComplete="current-password"
                 required
@@ -94,8 +94,8 @@ function LoginForm() {
               />
               <button
                 type="button"
-                onClick={() => setShowPassword((s) => !s)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                onClick={() => setShowParolă((s) => !s)}
+                aria-label={showParolă ? 'Hide password' : 'Show password'}
                 style={{
                   position: 'absolute',
                   right: 6,
@@ -105,7 +105,7 @@ function LoginForm() {
                   color: 'var(--ink-400)',
                 }}
               >
-                {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                {showParolă ? <EyeOff size={17} /> : <Eye size={17} />}
               </button>
             </div>
           </div>
@@ -115,16 +115,16 @@ function LoginForm() {
           <button type="submit" className="btn btn-primary btn-lg btn-full" disabled={loading}>
             {loading ? <span className="spinner" /> : (
               <>
-                Sign in <ArrowRight size={18} />
+                Autentificare <ArrowRight size={18} />
               </>
             )}
           </button>
         </form>
 
         <p className="text-center small muted mt-6">
-          New to Kova?{' '}
+          Nu ai cont RIDO?{' '}
           <Link href="/signup" style={{ fontWeight: 600, color: 'var(--text)' }}>
-            Create an account
+            Creează un cont
           </Link>
         </p>
 
