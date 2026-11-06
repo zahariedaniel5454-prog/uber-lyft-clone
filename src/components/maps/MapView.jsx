@@ -51,7 +51,7 @@ const SQUARE_SVG =
   '<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>';
 
 export default function MapView({
-  center = { lat: 40.7128, lng: -74.006 },
+  center = { lat: 45.7489, lng: 21.2087 },
   zoom = 13,
   pickup,
   dropoff,
