@@ -23,6 +23,8 @@ const VEHICLE_META = {
   xl: { icon: Users, blurb: 'Up to 6 seats' },
 };
 
+const TIMISOARA_CENTER = { lat: 45.7489, lng: 21.2087 };
+
 const CANCEL_REASONS = [
   'Driver is taking too long',
   'Booked by mistake',
@@ -243,7 +245,7 @@ export default function RiderDashboard() {
     };
   }, [phase, ride, driverPosition, pickup, dropoff, estimate, nearby, geo]);
 
-  const center = geo || { lat: 40.7128, lng: -74.006 };
+  const center = geo || TIMISOARA_CENTER;
 
   return (
     <div className="ride-page">
@@ -271,7 +273,7 @@ export default function RiderDashboard() {
                 committedValue={pickup?.address}
                 placeholder="Pickup location"
                 icon={Circle}
-                bias={geo || undefined}
+                bias={geo || TIMISOARA_CENTER}
               />
               <PlaceSearch
                 value={dropoffText}
