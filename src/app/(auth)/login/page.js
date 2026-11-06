@@ -10,9 +10,9 @@ import LegalFooter from '@/components/shell/LegalFooter';
 
 function LoginForm() {
   const searchParams = useSearchParams();
-  const [username, setNume de utilizator] = useState('');
-  const [password, setParolă] = useState('');
-  const [showParolă, setShowParolă] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -68,7 +68,7 @@ function LoginForm() {
                 id="username"
                 className="input"
                 value={username}
-                onChange={(e) => setNume de utilizator(e.target.value)}
+                onChange={(e) => setUsername(e.target.value)}
                 placeholder="yourusername"
                 autoComplete="username"
                 autoFocus
@@ -84,9 +84,9 @@ function LoginForm() {
               <input
                 id="password"
                 className="input"
-                type={showParolă ? 'text' : 'password'}
+                type={showPassword ? 'text' : 'password'}
                 value={password}
-                onChange={(e) => setParolă(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
                 autoComplete="current-password"
                 required
@@ -94,8 +94,8 @@ function LoginForm() {
               />
               <button
                 type="button"
-                onClick={() => setShowParolă((s) => !s)}
-                aria-label={showParolă ? 'Hide password' : 'Show password'}
+                onClick={() => setShowPassword((s) => !s)}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
                 style={{
                   position: 'absolute',
                   right: 6,
@@ -105,7 +105,7 @@ function LoginForm() {
                   color: 'var(--ink-400)',
                 }}
               >
-                {showParolă ? <EyeOff size={17} /> : <Eye size={17} />}
+                {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
               </button>
             </div>
           </div>
