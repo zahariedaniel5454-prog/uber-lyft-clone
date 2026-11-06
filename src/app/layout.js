@@ -1,5 +1,6 @@
 import { DM_Sans } from 'next/font/google';
 import './globals.css';
+import PWARegister from '@/components/shell/PWARegister';
 
 const dmSans = DM_Sans({
   subsets: ['latin'],
@@ -51,7 +52,7 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="ro" className={dmSans.variable}>
-      <body>{children}</body>
+      <body><PWARegister />{children}</body>
     </html>
   );
 }
