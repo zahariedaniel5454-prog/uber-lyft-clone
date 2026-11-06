@@ -1,5 +1,5 @@
 /**
- * Kova seed script — creates an admin, demo riders/drivers and pricing rules.
+ * RIDO local demo seed script — creates an admin, demo riders/drivers and pricing rules.
  *
  *   node scripts/seed.js
  *
@@ -24,7 +24,7 @@ if (fs.existsSync(envPath)) {
   }
 }
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/kova';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/rido';
 const PASSWORD = 'kovademo1';
 
 // Manhattan-ish demo coordinates
@@ -46,9 +46,9 @@ const VEHICLES = [
 
 // Driver-first economics: small platform commission, low rider rates
 const PRICING = [
-  { vehicleType: 'economy', baseFare: 2.0, perKmRate: 1.0, perMinRate: 0.15, minimumFare: 4, bookingFee: 0.5, platformCommission: 8, surgeMultiplierCap: 3 },
+  { vehicleType: 'economy', baseFare: 2.0, perKmRate: 1.0, perMinRate: 0.15, minimumFare: 4, bookingFee: 0.5, platformCommission: 15, surgeMultiplierCap: 3 },
   { vehicleType: 'comfort', baseFare: 3.0, perKmRate: 1.5, perMinRate: 0.25, minimumFare: 6.5, bookingFee: 0.75, platformCommission: 8, surgeMultiplierCap: 3 },
-  { vehicleType: 'premium', baseFare: 5.0, perKmRate: 2.5, perMinRate: 0.4, minimumFare: 12, bookingFee: 1.0, platformCommission: 10, surgeMultiplierCap: 3 },
+  { vehicleType: 'premium', baseFare: 5.0, perKmRate: 2.5, perMinRate: 0.4, minimumFare: 12, bookingFee: 1.0, platformCommission: 15, surgeMultiplierCap: 3 },
   { vehicleType: 'xl', baseFare: 4.0, perKmRate: 1.8, perMinRate: 0.3, minimumFare: 8, bookingFee: 0.75, platformCommission: 8, surgeMultiplierCap: 3 },
 ];
 
@@ -71,7 +71,7 @@ async function main() {
       role,
       passwordHash,
       avatar: '',
-      wallet: { balance: role === 'rider' ? 100 : 0, currency: 'USD' },
+      wallet: { balance: role === 'rider' ? 100 : 0, currency: 'RON' },
       rating: { average: 5, count: 0 },
       isActive: true,
       savedPlaces: [],
@@ -81,7 +81,7 @@ async function main() {
   });
 
   // Admin + demo rider
-  await users.updateOne({ username: 'admin' }, baseUser('admin', 'Kova Admin', 'admin'), { upsert: true });
+  await users.updateOne({ username: 'admin' }, baseUser('admin', 'RIDO Admin', 'admin'), { upsert: true });
   await users.updateOne({ username: 'rider1' }, baseUser('rider1', 'Riley Carter', 'rider'), { upsert: true });
   console.log('✓ admin (admin) & rider (rider1) ready — password:', PASSWORD);
 
