@@ -4,8 +4,7 @@ A full-stack, realtime Uber-style platform: rider app, driver app and admin
 console in one Next.js 16 codebase. No paid map APIs — maps, geocoding and
 routing all run on free, keyless services.
 
-RIDO folosește o bază open-source cu licență MIT under the [MIT licence](LICENSE) and listed on
-[Nucleus](https://nucleus.harakumo.com/-/explore).
+RIDO folosește o bază de cod open-source distribuită sub licența MIT. Proiectul RIDO este independent și nu este afiliat cu Bolt sau Uber.
 
 ## Stack
 
@@ -32,9 +31,7 @@ npm run seed                 # admin, demo rider, 5 approved drivers, pricing
 npm run dev                  # custom server: Next.js + Socket.IO on :3000
 ```
 
-Demo accounts (password `ridodemo1` for all): `admin`, `rider1`,
-`driver1`…`driver5`. The seed password is public, so change it (and delete the
-demo accounts) on any instance other people can reach.
+Atenție: scriptul `npm run seed` creează conturi demonstrative cu parola publică `kovademo1`. Nu rula scriptul pe o bază de date de producție și nu expune conturile demonstrative pe internet.
 
 ### Demo a full ride without a second device
 
@@ -109,7 +106,7 @@ explains each one.
 
 ## Publicare și găzduire
 
-Kova is a Node server (`server.js` runs Next.js and Socket.IO in one
+RIDO este un server Node (`server.js` runs Next.js and Socket.IO in one
 proces), deci trebuie găzduit ca serviciu Node persistent, nu ca site static. Railway documentează servicii persistente și suport pentru aplicații Socket.IO.
 
 1. Creează un proiect în [Railway](https://railway.com/).
@@ -151,7 +148,7 @@ Notes:
   sign-up 15/hour, sign-in 30 per 10 minutes, contact form 5/hour (the
   contact form also keeps its own 5/hour counter in Redis).
 - **Any other Node host works too:** `npm run build && npm start`, or the
-  `Dockerfile` (`docker build --build-arg NEXT_PUBLIC_APP_URL=https://your-domain.com -t kova .`).
+  `Dockerfile` (`docker build --build-arg NEXT_PUBLIC_APP_URL=https://your-domain.com -t rido .`).
 
 ### Înainte de lansarea comercială
 
