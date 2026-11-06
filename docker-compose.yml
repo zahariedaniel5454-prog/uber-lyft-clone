@@ -3,18 +3,18 @@ version: '3.8'
 services:
   mongodb:
     image: mongo:7
-    container_name: kova-mongodb
+    container_name: rido-mongodb
     ports:
       - '27017:27017'
     volumes:
       - mongodb_data:/data/db
     environment:
-      MONGO_INITDB_DATABASE: kova
+      MONGO_INITDB_DATABASE: rido
     restart: unless-stopped
 
   redis:
     image: redis:7-alpine
-    container_name: kova-redis
+    container_name: rido-redis
     ports:
       - '6379:6379'
     volumes:
