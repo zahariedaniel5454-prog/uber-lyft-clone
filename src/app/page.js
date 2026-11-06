@@ -142,7 +142,7 @@ export default function LandingPage() {
 
       {/* ── Cum funcționează ── */}
       <section style={{ maxWidth: 1120, margin: '0 auto', padding: '72px 24px' }}>
-        <span className="eyebrow">How it works</span>
+        <span className="eyebrow">Cum funcționează</span>
         <h2 style={{ fontSize: '2rem', marginTop: 10 }}>Trei pași simpli</h2>
         <div className="grid-3 mt-8">
           {STEPS.map((s) => (
