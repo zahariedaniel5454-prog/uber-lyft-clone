@@ -16,15 +16,7 @@ services:
         value: "1"
       - key: NEXTAUTH_SECRET
         generateValue: true
-      - key: NEXTAUTH_URL
-        sync: false
-      - key: NEXT_PUBLIC_APP_URL
-        sync: false
       - key: MONGODB_URI
         sync: false
       - key: REDIS_URL
-        sync: false
-      - key: STRIPE_SECRET_KEY
-        sync: false
-      - key: STRIPE_WEBHOOK_SECRET
         sync: false
