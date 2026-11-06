@@ -30,12 +30,12 @@ function SignupForm() {
     setFieldError('');
 
     if (form.password !== form.confirmPassword) {
-      setError('Passwords do not match');
+      setError('Parolele nu coincid');
       setFieldError('confirmPassword');
       return;
     }
     if (form.password.length < 8) {
-      setError('Password must be at least 8 characters');
+      setError('Parola trebuie să aibă minimum 8 caractere');
       setFieldError('password');
       return;
     }
@@ -51,7 +51,7 @@ function SignupForm() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.error || 'Failed to create account');
+        setError(data.error || 'Nu s-a putut crea contul');
         setFieldError(data.field || '');
         setLoading(false);
         return;
@@ -70,7 +70,7 @@ function SignupForm() {
       }
       window.location.href = form.role === 'driver' ? '/driver/dashboard' : '/dashboard';
     } catch {
-      setError('Something went wrong — please try again');
+      setError('A apărut o eroare. Încearcă din nou.');
       setLoading(false);
     }
   }
@@ -102,24 +102,24 @@ function SignupForm() {
     <div className="auth-page">
       <div className="auth-card animate-in">
         <div className="flex justify-center mb-6">
-          <Link href="/" aria-label="Kova home">
+          <Link href="/" aria-label="RIDO - pagina principală">
             <KovaLogo size={38} />
           </Link>
         </div>
 
         <h1 className="text-center" style={{ fontSize: '1.5rem' }}>
-          Create your account
+          Creează-ți contul
         </h1>
-        <p className="text-center muted small mt-1 mb-6">Free to join, ready in seconds</p>
+        <p className="text-center muted small mt-1 mb-6">Înregistrare gratuită, în câteva secunde</p>
 
         <form onSubmit={handleSubmit} className="flex-col gap-4">
           <div className="flex gap-3">
-            {roleCard('rider', Navigation, 'Ride', 'Book trips around town')}
-            {roleCard('driver', Car, 'Drive', 'Earn on your schedule')}
+            {roleCard('rider', Navigation, 'Client', 'Comandă curse')}
+            {roleCard('driver', Car, 'Șofer', 'Câștigă în programul tău')}
           </div>
 
           <div className="field">
-            <label htmlFor="name">Full name</label>
+            <label htmlFor="name">Nume complet</label>
             <div className="input-wrap">
               <User size={17} />
               <input
@@ -136,7 +136,7 @@ function SignupForm() {
           </div>
 
           <div className="field">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">Nume de utilizator</label>
             <div className="input-wrap">
               <AtSign size={17} />
               <input
@@ -168,7 +168,7 @@ function SignupForm() {
                 type="password"
                 value={form.password}
                 onChange={set('password')}
-                placeholder="At least 8 characters"
+                placeholder="Minimum 8 caractere"
                 autoComplete="new-password"
                 required
                 minLength={8}
@@ -177,7 +177,7 @@ function SignupForm() {
           </div>
 
           <div className="field">
-            <label htmlFor="confirmPassword">Confirm password</label>
+            <label htmlFor="confirmPassword">Confirmă parola</label>
             <div className="input-wrap">
               <Lock size={17} />
               <input
@@ -186,7 +186,7 @@ function SignupForm() {
                 type="password"
                 value={form.confirmPassword}
                 onChange={set('confirmPassword')}
-                placeholder="Repeat your password"
+                placeholder="Reintrodu parola"
                 autoComplete="new-password"
                 required
               />
@@ -196,13 +196,13 @@ function SignupForm() {
           {error && <p className="input-error-msg">{error}</p>}
 
           <p className="tiny muted text-center" style={{ lineHeight: 1.6 }}>
-            By creating an account you agree to our{' '}
+            Prin crearea contului ești de acord cu{' '}
             <Link href="/terms" style={{ fontWeight: 600, color: 'var(--text)', textDecoration: 'underline' }}>
-              Terms of Service
+              Termenii și condițiile
             </Link>{' '}
             and{' '}
             <Link href="/privacy" style={{ fontWeight: 600, color: 'var(--text)', textDecoration: 'underline' }}>
-              Privacy Policy
+              Politica de confidențialitate
             </Link>
             .
           </p>
@@ -210,16 +210,16 @@ function SignupForm() {
           <button type="submit" className="btn btn-primary btn-lg btn-full" disabled={loading}>
             {loading ? <span className="spinner" /> : (
               <>
-                Create account <ArrowRight size={18} />
+                Creează cont <ArrowRight size={18} />
               </>
             )}
           </button>
         </form>
 
         <p className="text-center small muted mt-6">
-          Already have an account?{' '}
+          Ai deja un cont?{' '}
           <Link href="/login" style={{ fontWeight: 600, color: 'var(--text)' }}>
-            Sign in
+            Autentificare
           </Link>
         </p>
 
