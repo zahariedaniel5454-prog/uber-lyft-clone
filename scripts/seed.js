@@ -47,9 +47,9 @@ const VEHICLES = [
 // Driver-first economics: small platform commission, low rider rates
 const PRICING = [
   { vehicleType: 'economy', baseFare: 2.0, perKmRate: 1.0, perMinRate: 0.15, minimumFare: 4, bookingFee: 0.5, platformCommission: 15, surgeMultiplierCap: 3 },
-  { vehicleType: 'comfort', baseFare: 3.0, perKmRate: 1.5, perMinRate: 0.25, minimumFare: 6.5, bookingFee: 0.75, platformCommission: 8, surgeMultiplierCap: 3 },
+  { vehicleType: 'comfort', baseFare: 3.0, perKmRate: 1.5, perMinRate: 0.25, minimumFare: 6.5, bookingFee: 0.75, platformCommission: 15, surgeMultiplierCap: 3 },
   { vehicleType: 'premium', baseFare: 5.0, perKmRate: 2.5, perMinRate: 0.4, minimumFare: 12, bookingFee: 1.0, platformCommission: 15, surgeMultiplierCap: 3 },
-  { vehicleType: 'xl', baseFare: 4.0, perKmRate: 1.8, perMinRate: 0.3, minimumFare: 8, bookingFee: 0.75, platformCommission: 8, surgeMultiplierCap: 3 },
+  { vehicleType: 'xl', baseFare: 4.0, perKmRate: 1.8, perMinRate: 0.3, minimumFare: 8, bookingFee: 0.75, platformCommission: 15, surgeMultiplierCap: 3 },
 ];
 
 async function main() {
