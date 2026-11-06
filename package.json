@@ -10,8 +10,8 @@
     "start:next": "next start",
     "lint": "eslint",
     "seed": "node scripts/seed.js",
-    "docker:build": "docker build -t kova .",
-    "docker:run": "docker run -p 3000:3000 --env-file .env.local kova",
+    "docker:build": "docker build -t rido .",
+    "docker:run": "docker run -p 3000:3000 --env-file .env.local rido",
     "db:up": "docker-compose up -d",
     "db:down": "docker-compose down",
     "sim:driver": "node scripts/simulate-driver.js"
