@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
-  Power, Navigation, MapPin, Circle, MessageCircle, X, Car,
+  Power, Navigation, MapPin, Circle, MessageCircle, X, Car, Phone,
   TrendingUp, CheckCircle2, KeyRound, Flag,
 } from 'lucide-react';
 import MapView from '@/components/maps/MapView';
@@ -287,6 +287,15 @@ export default function DriverDashboard() {
             )}
 
             <div className="flex gap-2 mt-3">
+              {ride.rider?.phone ? (
+                <a className="btn btn-secondary flex-1" href={`tel:${String(ride.rider.phone).replace(/[^+\\d]/g, '')}`} aria-label="Sună clientul">
+                  <Phone size={16} /> Sună
+                </a>
+              ) : (
+                <button className="btn btn-secondary flex-1" disabled title="Clientul nu a adăugat un număr de telefon">
+                  <Phone size={16} /> Fără telefon
+                </button>
+              )}
               <button className="btn btn-secondary flex-1" onClick={() => { setChatOpen(true); setUnread(0); }} style={{ position: 'relative' }}>
                 <MessageCircle size={16} /> Chat
                 {unread > 0 && (
