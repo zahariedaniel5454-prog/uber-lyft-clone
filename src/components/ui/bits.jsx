@@ -110,6 +110,6 @@ export const VEHICLE_LABELS = {
   xl: 'Kova XL',
 };
 
-export function money(n, currency = 'USD') {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(n ?? 0);
+export function money(n, currency = 'RON') {
+  return new Intl.NumberFormat('ro-RO', { style: 'currency', currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n ?? 0);
 }
