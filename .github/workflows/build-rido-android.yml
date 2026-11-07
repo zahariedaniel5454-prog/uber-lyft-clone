@@ -1,0 +1,73 @@
+name: Build RIDO Android apps
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "android/**"
+      - ".github/workflows/build-rido-android.yml"
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Bubblewrap
+        run: npm install --global @bubblewrap/cli
+
+      - name: Build RIDO Client
+        working-directory: android/rido-client
+        env:
+          RIDO_KEYSTORE_BASE64: ${{ secrets.RIDO_CLIENT_KEYSTORE_BASE64 }}
+          BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.RIDO_CLIENT_KEYSTORE_PASSWORD }}
+          BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.RIDO_CLIENT_KEY_PASSWORD }}
+        run: |
+          test -n "$RIDO_KEYSTORE_BASE64" || (echo "Missing RIDO_CLIENT_KEYSTORE_BASE64 secret" && exit 1)
+          mkdir -p android-keystore
+          printf '%s' "$RIDO_KEYSTORE_BASE64" | base64 --decode > android-keystore/rido-client-upload.p12
+          test -s android-keystore/rido-client-upload.p12
+          bubblewrap build --skipPwaValidation
+
+      - name: Build RIDO Driver
+        working-directory: android/rido-driver
+        env:
+          RIDO_KEYSTORE_BASE64: ${{ secrets.RIDO_DRIVER_KEYSTORE_BASE64 }}
+          BUBBLEWRAP_KEYSTORE_PASSWORD: ${{ secrets.RIDO_DRIVER_KEYSTORE_PASSWORD }}
+          BUBBLEWRAP_KEY_PASSWORD: ${{ secrets.RIDO_DRIVER_KEY_PASSWORD }}
+        run: |
+          test -n "$RIDO_KEYSTORE_BASE64" || (echo "Missing RIDO_DRIVER_KEYSTORE_BASE64 secret" && exit 1)
+          mkdir -p android-keystore
+          printf '%s' "$RIDO_KEYSTORE_BASE64" | base64 --decode > android-keystore/rido-driver-upload.p12
+          test -s android-keystore/rido-driver-upload.p12
+          bubblewrap build --skipPwaValidation
+
+      - name: Collect signed Android packages
+        run: |
+          mkdir -p release
+          cp android/rido-client/app-release-bundle.aab release/RIDO-Client.aab
+          cp android/rido-client/app-release-signed.apk release/RIDO-Client.apk
+          cp android/rido-driver/app-release-bundle.aab release/RIDO-Sofer.aab
+          cp android/rido-driver/app-release-signed.apk release/RIDO-Sofer.apk
+
+      - name: Upload signed Android packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: rido-android-release
+          path: release/*
+          if-no-files-found: error
+          retention-days: 14
