@@ -118,7 +118,7 @@ async function loadDriverBundle(ride) {
 
 // ─── Create & dispatch ────────────────────────────────────────────────────────
 
-export async function createRide({ riderId, pickup, dropoff, vehicleType }) {
+export async function createRide({ riderId, pickup, dropoff, vehicleType, paymentMethod = 'cash' }) {
   await connectDB();
 
   // One live ride per rider
@@ -154,7 +154,7 @@ export async function createRide({ riderId, pickup, dropoff, vehicleType }) {
     );
   }
 
-  if (balance < fare.total) {
+  if (paymentMethod === 'wallet' && balance < fare.total) {
     throw new RideError(
       'Insufficient wallet balance — add funds to book this ride',
       402
@@ -175,7 +175,7 @@ export async function createRide({ riderId, pickup, dropoff, vehicleType }) {
     },
     vehicleType,
     fare,
-    payment: { method: 'wallet', status: 'pending' },
+    payment: { method: paymentMethod, status: 'pending' },
     pin,
     timeline: [
       { status: 'searching', timestamp: new Date(), location: point(pickup.lat, pickup.lng) },
@@ -369,43 +369,58 @@ export async function completeRide({ rideId, driverUserId }) {
   const total = ride.fare.total;
   const driverEarnings = ride.fare.driverEarnings;
 
-  // Charge the rider's wallet. The balance is allowed to go negative if it
-  // dropped since booking — the trip happened, so the fare is owed and they
-  // must settle before booking again (enforced in createRide).
-  const rider = await User.findByIdAndUpdate(
-    ride.riderId,
-    { $inc: { 'wallet.balance': -total } },
-    { new: true }
-  );
-  const shortfall = rider ? rider.wallet.balance < 0 : false;
-
-  if (rider) {
-    await WalletTransaction.create({
-      userId: ride.riderId,
-      type: 'ride_payment',
-      amount: -total,
-      balanceAfter: rider.wallet.balance,
-      rideId: ride._id,
-      note: `Ride to ${ride.dropoff.address}`.slice(0, 200),
-    });
-  }
-
-  // Credit the driver their share regardless — they did the work, and any
-  // rider shortfall is a platform receivable, not the driver's problem.
-  const driverUser = await User.findByIdAndUpdate(
-    ride.driverId,
-    { $inc: { 'wallet.balance': driverEarnings } },
-    { new: true }
-  );
-  if (driverUser) {
-    await WalletTransaction.create({
-      userId: ride.driverId,
-      type: 'ride_earning',
-      amount: driverEarnings,
-      balanceAfter: driverUser.wallet.balance,
-      rideId: ride._id,
-      note: `Trip earnings`,
-    });
+  let shortfall = false;
+  if (ride.payment.method === 'cash') {
+    // The driver collects the full fare in cash. Deduct only RIDO's
+    // commission from the driver's in-app balance; do not charge the rider.
+    const driverUser = await User.findByIdAndUpdate(
+      ride.driverId,
+      { $inc: { 'wallet.balance': -ride.fare.platformFee } },
+      { new: true }
+    );
+    if (driverUser && ride.fare.platformFee > 0) {
+      await WalletTransaction.create({
+        userId: ride.driverId,
+        type: 'commission',
+        amount: -ride.fare.platformFee,
+        balanceAfter: driverUser.wallet.balance,
+        rideId: ride._id,
+        note: 'RIDO commission for cash trip',
+      });
+    }
+  } else {
+    // Wallet payment: charge rider and credit driver's net earnings.
+    const rider = await User.findByIdAndUpdate(
+      ride.riderId,
+      { $inc: { 'wallet.balance': -total } },
+      { new: true }
+    );
+    shortfall = rider ? rider.wallet.balance < 0 : false;
+    if (rider) {
+      await WalletTransaction.create({
+        userId: ride.riderId,
+        type: 'ride_payment',
+        amount: -total,
+        balanceAfter: rider.wallet.balance,
+        rideId: ride._id,
+        note: `Ride to ${ride.dropoff.address}`.slice(0, 200),
+      });
+    }
+    const driverUser = await User.findByIdAndUpdate(
+      ride.driverId,
+      { $inc: { 'wallet.balance': driverEarnings } },
+      { new: true }
+    );
+    if (driverUser) {
+      await WalletTransaction.create({
+        userId: ride.driverId,
+        type: 'ride_earning',
+        amount: driverEarnings,
+        balanceAfter: driverUser.wallet.balance,
+        rideId: ride._id,
+        note: 'Trip earnings',
+      });
+    }
   }
 
   ride.payment.status = 'captured';
@@ -420,7 +435,7 @@ export async function completeRide({ rideId, driverUserId }) {
     platformFee: ride.fare.platformFee,
     driverPayout: driverEarnings,
     status: 'succeeded',
-    method: 'wallet',
+    method: ride.payment.method,
   });
 
   // ── Free the driver & update stats ──────────────────────────────
