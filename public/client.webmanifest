@@ -1,0 +1,21 @@
+{
+  "id": "/client",
+  "name": "RIDO Client",
+  "short_name": "RIDO Client",
+  "description": "Comandă curse RIDO în Timișoara.",
+  "lang": "ro-RO",
+  "start_url": "/dashboard",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0C0A09",
+  "theme_color": "#0C0A09",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
