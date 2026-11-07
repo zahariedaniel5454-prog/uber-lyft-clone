@@ -27,5 +27,6 @@
   "minSdkVersion": 23,
   "orientation": "portrait",
   "fingerprints": [],
-  "additionalTrustedOrigins": []
+  "additionalTrustedOrigins": [],
+  "webManifestUrl": "https://uber-lyft-clone-production.up.railway.app/driver.webmanifest"
 }
