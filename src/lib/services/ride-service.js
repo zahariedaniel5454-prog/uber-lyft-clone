@@ -66,7 +66,7 @@ function coordsToLatLng(location) {
 }
 
 /** Public shape of a ride for API responses & socket payloads. */
-export function serializeRide(ride, { driver, driverUser } = {}) {
+export function serializeRide(ride, { driver, driverUser, riderUser } = {}) {
   const r = ride.toObject ? ride.toObject({ virtuals: false }) : ride;
   return {
     id: String(r._id),
@@ -88,6 +88,7 @@ export function serializeRide(ride, { driver, driverUser } = {}) {
     cancelledBy: r.cancelledBy,
     cancellationReason: r.cancellationReason,
     riderId: String(r.riderId),
+    rider: riderUser ? { name: riderUser.name || '', phone: riderUser.phone || '' } : undefined,
     driverId: r.driverId ? String(r.driverId) : null,
     driver: driver
       ? {
@@ -256,7 +257,10 @@ export async function acceptRide({ rideId, driverUserId }) {
     }
   );
 
-  const driverUser = await User.findById(driverUserId).lean();
+  const [driverUser, riderUser] = await Promise.all([
+    User.findById(driverUserId).lean(),
+    User.findById(ride.riderId).select('name phone').lean(),
+  ]);
   const pickup = coordsToLatLng(ride.pickup.location);
   const driverLoc = claimedDriver.location ? coordsToLatLng(claimedDriver.location) : null;
   const etaMinutes = driverLoc
@@ -269,7 +273,7 @@ export async function acceptRide({ rideId, driverUserId }) {
   joinDriverToRide(String(driverUserId), String(ride._id));
 
   emitToRider(String(ride.riderId), 'ride:accepted', {
-    ride: serializeRide(ride, { driver: claimedDriver, driverUser }),
+    ride: serializeRide(ride, { driver: claimedDriver, driverUser, riderUser }),
     etaMinutes,
   });
   emitToAdmin('ride:updated', { rideId: String(ride._id), status: 'accepted' });
@@ -661,6 +665,10 @@ export async function getActiveRide({ userId, role }) {
   if (!ride) return null;
 
   const { driver, driverUser } = await loadDriverBundle(ride);
+  if (role === 'driver') {
+    const riderUser = await User.findById(ride.riderId).select('name phone').lean();
+    return serializeRide(ride, { driver, driverUser, riderUser });
+  }
   return serializeRide(ride, { driver, driverUser });
 }
 
