@@ -1,13 +1,5 @@
-import { DM_Sans } from 'next/font/google';
 import './globals.css';
 import PWARegister from '@/components/shell/PWARegister';
-
-const dmSans = DM_Sans({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-sans',
-  display: 'swap',
-});
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
@@ -51,7 +43,7 @@ export const viewport = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="ro" className={dmSans.variable}>
+    <html lang="ro">
       <body><PWARegister />{children}</body>
     </html>
   );
