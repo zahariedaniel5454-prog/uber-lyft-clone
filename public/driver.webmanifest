@@ -4,7 +4,7 @@
   "short_name": "RIDO Șofer",
   "description": "Primește și gestionează curse RIDO.",
   "lang": "ro-RO",
-  "start_url": "/driver/dashboard",
+  "start_url": "/driver-app",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
