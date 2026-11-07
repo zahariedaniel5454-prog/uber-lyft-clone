@@ -10,5 +10,7 @@
   "orientation": "portrait",
   "background_color": "#0C0A09",
   "theme_color": "#0C0A09",
-  "icons": [{ "src": "/driver-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+  "icons": [
+    { "src": "/driver-icon.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
 }
