@@ -132,6 +132,10 @@ async function runCascade(rideId) {
     ride.dispatch.offersSent = (ride.dispatch.offersSent || 0) + 1;
     await ride.save();
 
+    // Subscribe to the driver's response before emitting the offer.
+    // Otherwise a very fast accept can arrive before waitForSignal attaches.
+    const signalPromise = waitForSignal(rideId, OFFER_TIMEOUT_MS);
+
     emitToDriver(driverUserId, 'ride:offer', {
       rideId: String(ride._id),
       pickup: { address: ride.pickup.address, ...pickup },
@@ -158,7 +162,7 @@ async function runCascade(rideId) {
       offersSent: ride.dispatch.offersSent,
     });
 
-    const signal = await waitForSignal(rideId, OFFER_TIMEOUT_MS);
+    const signal = await signalPromise;
 
     if (signal.type === 'accepted') {
       // Accept route already updated everything
