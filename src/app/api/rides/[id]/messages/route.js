@@ -1,10 +1,31 @@
 import { z } from 'zod';
+import connectDB from '@/lib/db/mongodb';
+import Ride from '@/lib/db/models/Ride';
 import { requireAuth } from '@/lib/auth/helpers';
 import { addRideMessage, RideError } from '@/lib/services/ride-service';
 
 const messageSchema = z.object({
   text: z.string().trim().min(1, 'Message cannot be empty').max(500),
 });
+
+// GET /api/rides/[id]/messages — recover chat history if realtime is unavailable
+export async function GET(request, { params }) {
+  const { session, error } = await requireAuth(['rider', 'driver']);
+  if (error) return error;
+  try {
+    const { id } = await params;
+    await connectDB();
+    const match = session.user.role === 'rider'
+      ? { _id: id, riderId: session.user.id }
+      : { _id: id, driverId: session.user.id };
+    const ride = await Ride.findOne(match).select('messages').lean();
+    if (!ride) return Response.json({ error: 'Ride not found' }, { status: 404 });
+    return Response.json({ messages: ride.messages || [] });
+  } catch (err) {
+    console.error('Ride messages fetch error:', err);
+    return Response.json({ error: 'Failed to fetch messages' }, { status: 500 });
+  }
+}
 
 // POST /api/rides/[id]/messages — send an in-ride chat message
 // (persisted, then relayed over the socket to the other party)
