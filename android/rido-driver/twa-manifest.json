@@ -1,0 +1,31 @@
+{
+  "packageId": "ro.rido.driver",
+  "host": "uber-lyft-clone-production.up.railway.app",
+  "name": "RIDO Șofer",
+  "launcherName": "RIDO Șofer",
+  "display": "standalone",
+  "themeColor": "#0C0A09",
+  "themeColorDark": "#0C0A09",
+  "navigationColor": "#0C0A09",
+  "navigationColorDark": "#0C0A09",
+  "backgroundColor": "#0C0A09",
+  "enableNotifications": false,
+  "startUrl": "/driver-app",
+  "iconUrl": "https://uber-lyft-clone-production.up.railway.app/driver-icon.svg",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android-keystore/rido-driver-upload.keystore",
+    "alias": "rido_driver_upload"
+  },
+  "appVersion": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "fallbackType": "customtabs",
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "minSdkVersion": 23,
+  "orientation": "portrait",
+  "fingerprints": [],
+  "additionalTrustedOrigins": []
+}
