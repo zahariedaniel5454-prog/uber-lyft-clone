@@ -14,6 +14,7 @@ const createSchema = z.object({
   pickup: latLng,
   dropoff: latLng,
   vehicleType: z.enum(['economy', 'comfort', 'premium', 'xl']).default('economy'),
+  paymentMethod: z.enum(['cash', 'wallet']).default('cash'),
 });
 
 // GET /api/rides — ride history for the current rider/driver
