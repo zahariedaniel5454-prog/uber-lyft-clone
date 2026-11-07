@@ -10,9 +10,28 @@ import { useToast } from '@/components/ui/Toast';
  */
 export default function ChatSheet({ rideId, role, messages, open, onClose, counterpartName }) {
   const [text, setText] = useState('');
+  const [localMessages, setLocalMessages] = useState(messages || []);
   const [sending, setSending] = useState(false);
   const listRef = useRef(null);
   const toast = useToast();
+
+  useEffect(() => { setLocalMessages(messages || []); }, [messages]);
+
+  useEffect(() => {
+    if (!open || !rideId) return undefined;
+    let active = true;
+    const refresh = async () => {
+      try {
+        const res = await fetch(`/api/rides/${rideId}/messages`, { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (active && Array.isArray(data.messages)) setLocalMessages(data.messages);
+      } catch { /* realtime remains available; retry on next poll */ }
+    };
+    refresh();
+    const timer = setInterval(refresh, 3000);
+    return () => { active = false; clearInterval(timer); };
+  }, [open, rideId]);
 
   useEffect(() => {
     if (open && listRef.current) {
@@ -36,6 +55,8 @@ export default function ChatSheet({ rideId, role, messages, open, onClose, count
         toast(data.error || 'Message failed to send', 'error');
       } else {
         setText('');
+        const data = await res.json().catch(() => ({}));
+        if (data.message) setLocalMessages((current) => [...current, data.message]);
       }
     } catch {
       toast('Message failed to send', 'error');
@@ -80,13 +101,13 @@ export default function ChatSheet({ rideId, role, messages, open, onClose, count
       </div>
 
       <div ref={listRef} className="flex-1" style={{ overflowY: 'auto', padding: 14 }}>
-        {messages.length === 0 && (
+        {localMessages.length === 0 && (
           <p className="tiny muted text-center" style={{ paddingTop: 40 }}>
             Say hi — messages stay in this trip.
           </p>
         )}
         <div className="flex-col gap-2">
-          {messages.map((m, i) => {
+          {localMessages.map((m, i) => {
             const mine = m.from === role;
             return (
               <div
