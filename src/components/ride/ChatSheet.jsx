@@ -37,7 +37,7 @@ export default function ChatSheet({ rideId, role, messages, open, onClose, count
     if (open && listRef.current) {
       listRef.current.scrollTop = listRef.current.scrollHeight;
     }
-  }, [messages, open]);
+  }, [localMessages, open]);
 
   async function send(e) {
     e?.preventDefault();
