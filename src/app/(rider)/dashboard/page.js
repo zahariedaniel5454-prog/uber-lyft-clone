@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
-  Navigation, MapPin, Circle, Car, Crown, Users, Zap, Wallet,
+  Navigation, MapPin, Circle, Car, Crown, Users, Zap, Wallet, Banknote,
   MessageCircle, X, ShieldCheck, Copy, TrendingUp,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -45,6 +45,7 @@ export default function RiderDashboard() {
   const [estimating, setEstimating] = useState(false);
   const [vehicleType, setVehicleType] = useState('economy');
   const [walletBalance, setWalletBalance] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState('cash');
   const [booking, setBooking] = useState(false);
   const [nearby, setNearby] = useState([]);
   const [chatOpen, setChatOpen] = useState(false);
@@ -165,7 +166,7 @@ export default function RiderDashboard() {
     if (!pickup || !dropoff || booking) return;
     setBooking(true);
     try {
-      await book({ pickup, dropoff, vehicleType });
+      await book({ pickup, dropoff, vehicleType, paymentMethod });
       setUnread(0);
     } catch (err) {
       toast(err.message, 'error', 5000);
@@ -223,7 +224,7 @@ export default function RiderDashboard() {
   const selectedFare = estimate?.estimates?.[vehicleType];
   const surge = selectedFare?.surgeMultiplier > 1;
   const insufficientWallet =
-    walletBalance != null && selectedFare && walletBalance < selectedFare.total;
+    paymentMethod === 'wallet' && walletBalance != null && selectedFare && walletBalance < selectedFare.total;
 
   const mapProps = useMemo(() => {
     if (phase === 'active' && ride) {
@@ -329,17 +330,25 @@ export default function RiderDashboard() {
                   })}
                 </div>
 
-                {/* Payment — wallet only */}
-                <div
-                  className="flex items-center justify-between mt-4"
-                  style={{ padding: '10px 14px', background: 'var(--ink-50)', borderRadius: 12 }}
-                >
-                  <span className="flex items-center gap-2 tiny" style={{ fontWeight: 600 }}>
-                    <Wallet size={16} /> Paying with wallet
-                  </span>
-                  <span className="tiny mono-nums muted">
-                    {walletBalance != null ? money(walletBalance) : '—'}
-                  </span>
+                {/* Payment method */}
+                <div className="mt-4">
+                  <p className="tiny muted mb-2" style={{ fontWeight: 700 }}>PAYMENT METHOD</p>
+                  <div className="flex gap-2">
+                    <button type="button" className={`vehicle-row flex-1 ${paymentMethod === 'cash' ? 'selected' : ''}`} onClick={() => setPaymentMethod('cash')} aria-pressed={paymentMethod === 'cash'}>
+                      <Banknote size={19} />
+                      <span className="small" style={{ fontWeight: 700 }}>Cash</span>
+                    </button>
+                    <button type="button" className={`vehicle-row flex-1 ${paymentMethod === 'wallet' ? 'selected' : ''}`} onClick={() => setPaymentMethod('wallet')} aria-pressed={paymentMethod === 'wallet'}>
+                      <Wallet size={19} />
+                      <span className="small" style={{ fontWeight: 700 }}>Wallet</span>
+                    </button>
+                  </div>
+                  {paymentMethod === 'wallet' && (
+                    <div className="tiny muted mt-2">Wallet balance: {walletBalance != null ? money(walletBalance) : '—'}</div>
+                  )}
+                  {paymentMethod === 'cash' && (
+                    <div className="tiny muted mt-2">Pay the driver in cash at the end of the trip.</div>
+                  )}
                 </div>
 
                 {insufficientWallet && (
@@ -499,7 +508,7 @@ export default function RiderDashboard() {
                 </span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="muted">Fare (wallet)</span>
+                <span className="muted">Fare ({ride.payment?.method === 'cash' ? 'cash' : 'wallet'})</span>
                 <span className="mono-nums" style={{ fontWeight: 700 }}>{money(ride.fare?.total)}</span>
               </div>
             </div>
