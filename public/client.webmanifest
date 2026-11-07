@@ -4,7 +4,7 @@
   "short_name": "RIDO Client",
   "description": "Comandă curse RIDO în Timișoara.",
   "lang": "ro-RO",
-  "start_url": "/dashboard",
+  "start_url": "/client",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
