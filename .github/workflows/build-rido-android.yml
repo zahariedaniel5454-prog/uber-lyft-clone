@@ -2,11 +2,6 @@ name: Build RIDO Android apps
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - "android/**"
-      - ".github/workflows/build-rido-android.yml"
-    branches: [main]
 
 permissions:
   contents: read
@@ -41,7 +36,7 @@ jobs:
           mkdir -p android-keystore
           printf '%s' "$RIDO_KEYSTORE_BASE64" | base64 --decode > android-keystore/rido-client-upload.p12
           test -s android-keystore/rido-client-upload.p12
-          bubblewrap build --skipPwaValidation
+          bubblewrap build
 
       - name: Build RIDO Driver
         working-directory: android/rido-driver
