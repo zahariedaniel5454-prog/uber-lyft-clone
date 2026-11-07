@@ -1,0 +1,31 @@
+{
+  "packageId": "ro.rido.client",
+  "host": "uber-lyft-clone-production.up.railway.app",
+  "name": "RIDO Client",
+  "launcherName": "RIDO Client",
+  "display": "standalone",
+  "themeColor": "#0C0A09",
+  "themeColorDark": "#0C0A09",
+  "navigationColor": "#0C0A09",
+  "navigationColorDark": "#0C0A09",
+  "backgroundColor": "#0C0A09",
+  "enableNotifications": false,
+  "startUrl": "/client",
+  "iconUrl": "https://uber-lyft-clone-production.up.railway.app/client-icon.svg",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "./android-keystore/rido-client-upload.keystore",
+    "alias": "rido_client_upload"
+  },
+  "appVersion": "1.0.0",
+  "appVersionCode": 1,
+  "shortcuts": [],
+  "fallbackType": "customtabs",
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "minSdkVersion": 23,
+  "orientation": "portrait",
+  "fingerprints": [],
+  "additionalTrustedOrigins": []
+}
