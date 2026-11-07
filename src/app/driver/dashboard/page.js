@@ -229,9 +229,9 @@ export default function DriverDashboard() {
           <div className="card card-pad animate-in">
             <div className="flex items-center justify-between mb-3">
               <span className={`badge badge-dot ${ride.status === 'in_progress' ? 'badge-info' : 'badge-gold'}`}>
-                {ride.status === 'accepted' && 'Head to pickup'}
-                {ride.status === 'arrived' && 'Waiting for rider'}
-                {ride.status === 'in_progress' && 'Trip in progress'}
+                {ride.status === 'accepted' && 'Mergi la client'}
+                {ride.status === 'arrived' && 'Ai ajuns la client'}
+                {ride.status === 'in_progress' && 'Cursa este în desfășurare'}
               </span>
               <span className="small mono-nums" style={{ fontWeight: 700 }}>
                 {money(ride.fare?.driverEarnings)}
@@ -272,17 +272,17 @@ export default function DriverDashboard() {
 
             {ride.status === 'accepted' && (
               <button className="btn btn-primary btn-lg btn-full" onClick={() => run(arrive, 'Rider notified that you arrived')} disabled={actionBusy}>
-                {actionBusy ? <span className="spinner" /> : <><Flag size={18} /> I’ve arrived</>}
+                {actionBusy ? <span className="spinner" /> : <><Flag size={18} /> Am ajuns</>}
               </button>
             )}
             {ride.status === 'arrived' && (
               <button className="btn btn-primary btn-lg btn-full" onClick={() => setPinOpen(true)} disabled={actionBusy}>
-                <KeyRound size={18} /> Enter PIN to start
+                <KeyRound size={18} /> Începe cursa
               </button>
             )}
             {ride.status === 'in_progress' && (
               <button className="btn btn-success btn-lg btn-full" onClick={handleComplete} disabled={actionBusy}>
-                {actionBusy ? <span className="spinner" /> : <><CheckCircle2 size={18} /> Complete trip</>}
+                {actionBusy ? <span className="spinner" /> : <><CheckCircle2 size={18} /> Finalizează cursa</>}
               </button>
             )}
 
@@ -330,7 +330,7 @@ export default function DriverDashboard() {
             >
               {countdown}
             </div>
-            <h3 style={{ fontSize: '1.2rem' }}>New ride request</h3>
+            <h3 style={{ fontSize: '1.2rem' }}>Cerere nouă de cursă</h3>
             <p className="small muted mt-1 mb-4">
               {offer.rider?.name || 'A rider'} · {formatDistance(offer.distanceToPickupMeters)} away · ~{offer.etaMinutes} min to pickup
             </p>
@@ -353,9 +353,12 @@ export default function DriverDashboard() {
                     </span>
                   )}
                 </span>
-                <span style={{ fontWeight: 800, fontSize: '1.15rem' }} className="mono-nums">
-                  {money(offer.earnings)}
-                </span>
+                <div className="text-right">
+                  <div style={{ fontWeight: 800, fontSize: '1.15rem' }} className="mono-nums">
+                    {money(offer.fareTotal ?? offer.earnings)}
+                  </div>
+                  <div className="tiny muted">Preț cursă · câștigul tău {money(offer.earnings)}</div>
+                </div>
               </div>
             </div>
 
@@ -364,7 +367,7 @@ export default function DriverDashboard() {
                 Decline
               </button>
               <button className="btn btn-success btn-lg flex-1" onClick={handleAccept} disabled={actionBusy || countdown === 0}>
-                {actionBusy ? <span className="spinner" /> : 'Accept'}
+                {actionBusy ? <span className="spinner" /> : 'Acceptă cursa'}
               </button>
             </div>
           </div>
@@ -372,8 +375,8 @@ export default function DriverDashboard() {
       </Modal>
 
       {/* ── PIN entry ── */}
-      <Modal open={pinOpen} onClose={() => setPinOpen(false)} title="Rider PIN">
-        <p className="small muted mb-4">Ask the rider for their 4-digit PIN to start the trip.</p>
+      <Modal open={pinOpen} onClose={() => setPinOpen(false)} title="Codul clientului">
+        <p className="small muted mb-4">Cere clientului codul PIN de 4 cifre, apoi pornește cursa.</p>
         <input
           className="input text-center mono-nums"
           style={{ fontSize: '1.6rem', letterSpacing: '0.4em', fontWeight: 700 }}
@@ -390,7 +393,7 @@ export default function DriverDashboard() {
           onClick={handleStart}
           disabled={pinValue.length !== 4 || actionBusy}
         >
-          {actionBusy ? <span className="spinner" /> : <><Navigation size={17} /> Start trip</>}
+          {actionBusy ? <span className="spinner" /> : <><Navigation size={17} /> Începe cursa</>}
         </button>
       </Modal>
 
