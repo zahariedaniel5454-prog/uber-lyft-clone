@@ -136,7 +136,7 @@ export async function calculateFare({
     driverEarnings: round(driverEarnings),
     total: round(total),
     estimatedTotal: round(total),
-    currency: 'USD',
+    currency: 'RON',
   };
 
   // Include H3 surge details if available
