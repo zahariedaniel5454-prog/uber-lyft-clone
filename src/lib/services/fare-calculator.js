@@ -5,9 +5,8 @@ import { calculateSurgeForLocation } from './h3-redis';
 /**
  * Default pricing rules (fallback if none exist in DB).
  *
- * Kova is driver-first: the platform keeps a small single-digit commission
- * (just enough to run the service), drivers keep ~90%+ of every fare, and
- * base rates are kept below big-app pricing so rides stay affordable.
+ * RIDO standard platform commission is 15% across all vehicle categories.
+ * Rates are expressed in Romanian lei (RON).
  */
 const DEFAULT_PRICING = {
   economy: {
@@ -16,7 +15,7 @@ const DEFAULT_PRICING = {
     perMinRate: 0.15,
     minimumFare: 4.0,
     bookingFee: 0.5,
-    platformCommission: 8,
+    platformCommission: 15,
   },
   comfort: {
     baseFare: 3.0,
@@ -32,7 +31,7 @@ const DEFAULT_PRICING = {
     perMinRate: 0.4,
     minimumFare: 12.0,
     bookingFee: 1.0,
-    platformCommission: 10,
+    platformCommission: 15,
   },
   xl: {
     baseFare: 4.0,
