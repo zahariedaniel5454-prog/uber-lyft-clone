@@ -15,6 +15,19 @@ const path = require('path');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
+// ── Never allow demo accounts or pre-approved demo drivers in production ──
+if (
+  process.env.NODE_ENV === 'production' ||
+  process.env.RAILWAY_ENVIRONMENT_NAME === 'production'
+) {
+  console.error(
+    'Refusing to run the demo seed script in production. ' +
+    'It creates public demo credentials and pre-approved fictional drivers. ' +
+    'Create the first administrator through a separate, secured bootstrap process.'
+  );
+  process.exit(1);
+}
+
 // ── Minimal .env.local loader (no dotenv dependency) ──
 const envPath = path.join(__dirname, '..', '.env.local');
 if (fs.existsSync(envPath)) {
