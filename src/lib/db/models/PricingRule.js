@@ -39,7 +39,7 @@ const pricingRuleSchema = new mongoose.Schema(
     platformCommission: {
       type: Number,
       required: true,
-      default: 20, // percentage
+      default: 15, // RIDO standard platform commission (percentage)
       min: 0,
       max: 50,
     },
