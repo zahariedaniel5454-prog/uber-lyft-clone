@@ -11,7 +11,8 @@ const ruleSchema = z.object({
   perMinRate: z.number().min(0).max(20),
   minimumFare: z.number().min(0).max(200),
   bookingFee: z.number().min(0).max(50),
-  platformCommission: z.number().min(0).max(50),
+  // Commission is a platform-wide business rule, not an editable fare setting.
+  platformCommission: z.literal(15),
   surgeMultiplierCap: z.number().min(1).max(10),
   isActive: z.boolean().default(true),
 });
@@ -24,7 +25,7 @@ export async function GET() {
   try {
     await connectDB();
     const rules = await PricingRule.find({}).sort({ city: 1, vehicleType: 1 }).lean();
-    return Response.json({ rules });
+    return Response.json({ rules: rules.map((rule) => ({ ...rule, platformCommission: 15 })) });
   } catch (err) {
     console.error('Pricing rules error:', err);
     return Response.json({ error: 'Failed to fetch pricing rules' }, { status: 500 });
@@ -55,9 +56,9 @@ export async function PUT(request) {
       { new: true, upsert: true, runValidators: true }
     ).lean();
 
-    return Response.json({ rule });
+    return Response.json({ rule: { ...rule, platformCommission: 15 } });
   } catch (err) {
     console.error('Pricing upsert error:', err);
-    return Response.json({ error: 'Failed to save pricing rule' }, { status: 500 });
+    return Response.json({ error: 'Failed to save pricing rules' }, { status: 500 });
   }
 }
