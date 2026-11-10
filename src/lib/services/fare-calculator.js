@@ -5,7 +5,7 @@ import { calculateSurgeForLocation } from './h3-redis';
 /**
  * Default pricing rules (fallback if none exist in DB).
  *
- * RIDO standard platform commission is 15% across all vehicle categories.
+ * RIDO standard platform commission is fixed at 15% across all vehicle categories.
  * Rates are expressed in Romanian lei (RON).
  */
 const DEFAULT_PRICING = {
@@ -23,7 +23,7 @@ const DEFAULT_PRICING = {
     perMinRate: 0.25,
     minimumFare: 6.5,
     bookingFee: 0.75,
-    platformCommission: 8,
+    platformCommission: 15,
   },
   premium: {
     baseFare: 5.0,
@@ -39,7 +39,7 @@ const DEFAULT_PRICING = {
     perMinRate: 0.3,
     minimumFare: 8.0,
     bookingFee: 0.75,
-    platformCommission: 8,
+    platformCommission: 15,
   },
 };
 
@@ -83,6 +83,9 @@ export async function calculateFare({
     pricing = DEFAULT_PRICING[vehicleType] || DEFAULT_PRICING.economy;
   }
 
+  // The RIDO platform commission is fixed at 15%; legacy DB values are ignored.
+  const platformCommission = 15;
+
   // ─── H3-Based Dynamic Surge ────────────────────────────────────────────────
   let surgeInfo = null;
   if (surgeMultiplier == null && pickup) {
@@ -121,7 +124,7 @@ export async function calculateFare({
   const total = subtotal + pricing.bookingFee;
 
   // Platform fee
-  const platformFee = total * (pricing.platformCommission / 100);
+  const platformFee = total * (platformCommission / 100);
   const driverEarnings = total - platformFee;
 
   const result = {
@@ -131,6 +134,7 @@ export async function calculateFare({
     surgeFare: round(surgeFare),
     surgeMultiplier,
     bookingFee: round(pricing.bookingFee),
+    platformCommission,
     platformFee: round(platformFee),
     driverEarnings: round(driverEarnings),
     total: round(total),
