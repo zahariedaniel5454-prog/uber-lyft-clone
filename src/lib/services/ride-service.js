@@ -44,8 +44,9 @@ async function addRideMember(rideId, userId) {
   try {
     await redis.sadd(`ride:members:${rideId}`, String(userId));
     await redis.expire(`ride:members:${rideId}`, 24 * 3600);
-  } catch {
-    /* server.js fails open when Redis is down */
+  } catch (error) {
+    // Do not create an unverified socket-room membership if Redis is unavailable.
+    console.error('[Ride] failed to register socket room member:', error.message);
   }
 }
 
