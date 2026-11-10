@@ -96,8 +96,7 @@ explains each one.
   for `checkout.session.completed` and `account.updated`. Without Stripe the
   wallet hands out **instant demo credits**, which is fine for a demo and
   wrong for real money.
-- **Drivers:** `DRIVER_AUTO_APPROVE=false` makes an admin approve each new
-  driver; anything else approves them instantly.
+- **Drivers:** production always requires manual administrator approval for every new driver; `DRIVER_AUTO_APPROVE` can affect local/demo environments only. Do not enable automatic approval for a commercial launch.
 - **Storage (optional):** `STORAGE_*` points `/api/upload/presigned` at any
   S3-compatible bucket; until it is set that endpoint answers 503. Profile
   pictures are resized and stored in MongoDB, so they need no bucket.

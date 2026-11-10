@@ -60,7 +60,12 @@ export async function POST(request) {
 
     // Drivers get a driver profile; vehicle details come from onboarding
     if (role === 'driver') {
-      const autoApprove = process.env.DRIVER_AUTO_APPROVE !== 'false';
+      // Production drivers must always be reviewed by an administrator.
+      // The opt-out flag remains useful for local/demo environments only.
+      const isProduction =
+        process.env.NODE_ENV === 'production' ||
+        process.env.RAILWAY_ENVIRONMENT_NAME === 'production';
+      const autoApprove = !isProduction && process.env.DRIVER_AUTO_APPROVE !== 'false';
       await Driver.create({
         userId: user._id,
         isApproved: autoApprove,

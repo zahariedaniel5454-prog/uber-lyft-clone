@@ -5,9 +5,8 @@ import { calculateSurgeForLocation } from './h3-redis';
 /**
  * Default pricing rules (fallback if none exist in DB).
  *
- * Kova is driver-first: the platform keeps a small single-digit commission
- * (just enough to run the service), drivers keep ~90%+ of every fare, and
- * base rates are kept below big-app pricing so rides stay affordable.
+ * RIDO standard platform commission is fixed at 15% across all vehicle categories.
+ * Rates are expressed in Romanian lei (RON).
  */
 const DEFAULT_PRICING = {
   economy: {
@@ -16,7 +15,7 @@ const DEFAULT_PRICING = {
     perMinRate: 0.15,
     minimumFare: 4.0,
     bookingFee: 0.5,
-    platformCommission: 8,
+    platformCommission: 15,
   },
   comfort: {
     baseFare: 3.0,
@@ -24,7 +23,7 @@ const DEFAULT_PRICING = {
     perMinRate: 0.25,
     minimumFare: 6.5,
     bookingFee: 0.75,
-    platformCommission: 8,
+    platformCommission: 15,
   },
   premium: {
     baseFare: 5.0,
@@ -32,7 +31,7 @@ const DEFAULT_PRICING = {
     perMinRate: 0.4,
     minimumFare: 12.0,
     bookingFee: 1.0,
-    platformCommission: 10,
+    platformCommission: 15,
   },
   xl: {
     baseFare: 4.0,
@@ -40,7 +39,7 @@ const DEFAULT_PRICING = {
     perMinRate: 0.3,
     minimumFare: 8.0,
     bookingFee: 0.75,
-    platformCommission: 8,
+    platformCommission: 15,
   },
 };
 
@@ -84,6 +83,9 @@ export async function calculateFare({
     pricing = DEFAULT_PRICING[vehicleType] || DEFAULT_PRICING.economy;
   }
 
+  // The RIDO platform commission is fixed at 15%; legacy DB values are ignored.
+  const platformCommission = 15;
+
   // ─── H3-Based Dynamic Surge ────────────────────────────────────────────────
   let surgeInfo = null;
   if (surgeMultiplier == null && pickup) {
@@ -122,7 +124,7 @@ export async function calculateFare({
   const total = subtotal + pricing.bookingFee;
 
   // Platform fee
-  const platformFee = total * (pricing.platformCommission / 100);
+  const platformFee = total * (platformCommission / 100);
   const driverEarnings = total - platformFee;
 
   const result = {
@@ -132,6 +134,7 @@ export async function calculateFare({
     surgeFare: round(surgeFare),
     surgeMultiplier,
     bookingFee: round(pricing.bookingFee),
+    platformCommission,
     platformFee: round(platformFee),
     driverEarnings: round(driverEarnings),
     total: round(total),

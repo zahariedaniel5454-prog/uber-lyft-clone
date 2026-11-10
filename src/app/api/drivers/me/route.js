@@ -30,7 +30,12 @@ export async function GET() {
 
     // Self-heal: driver user without a profile (e.g. role changed by admin)
     if (!driver) {
-      const autoApprove = process.env.DRIVER_AUTO_APPROVE !== 'false';
+      // A missing driver profile must never bypass manual approval in production.
+      // Auto-approval is restricted to explicitly enabled non-production environments.
+      const isProduction =
+        process.env.NODE_ENV === 'production' ||
+        process.env.RAILWAY_ENVIRONMENT_NAME === 'production';
+      const autoApprove = !isProduction && process.env.DRIVER_AUTO_APPROVE === 'true';
       driver = (
         await Driver.create({ userId: session.user.id, isApproved: autoApprove })
       ).toObject();
